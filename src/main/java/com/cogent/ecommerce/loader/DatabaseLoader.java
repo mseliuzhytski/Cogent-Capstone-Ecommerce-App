@@ -5,11 +5,15 @@ import com.cogent.ecommerce.repository.DiscountRepository;
 import com.cogent.ecommerce.repository.ProductRepository;
 import com.cogent.ecommerce.repository.SalesRepository;
 import com.cogent.ecommerce.model.*;
+import com.cogent.ecommerce.service.CategoryService;
+import com.cogent.ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class DatabaseLoader {
@@ -122,9 +126,10 @@ public class DatabaseLoader {
     }
 
     private void loadProducts() {
+
         Product product = new Product();
         product.setName("Pencil");
-        product.setCategory("Office Supplies");
+        //product.setCategory("Office Supplies");
         product.setPrice(1.99);
         product.setDateAdded(Instant.now().toEpochMilli());
         product.setImageLocation("pencil.jpg");
@@ -134,13 +139,49 @@ public class DatabaseLoader {
 
         product = new Product();
         product.setName("Eraser");
-        product.setCategory("Office Supplies");
+        //product.setCategory("Office Supplies");
         product.setPrice(2.99);
         product.setDateAdded(Instant.now().toEpochMilli());
         product.setImageLocation("eraser.jpg");
         product.setStock(10);
 
         productRepository.saveProduct(product);
+    }
+
+    @Autowired
+    CategoryService categoryService;
+    @Autowired
+    ProductService productService;
+
+    void updatedLoadProducts(){
+
+        Category category = new Category();
+        category.setName("Men's Clothing");
+        categoryService.addCategory(category);
+
+        Category category2 = new Category();
+        category2.setName("Clothing");
+        categoryService.addCategory(category2);
+
+        Category category3 = new Category();
+        category3.setName("Jackets");
+        categoryService.addCategory(category3);
+
+        Product p1 = new Product();
+        p1.setName("FUBU Orange Windbreaker");
+        Set<Category> categories = new HashSet<>();
+        categories.add(category);
+        categories.add(category2);
+        p1.setCategoriesList(categories);
+        p1.setPrice(109.99);
+        p1.setDetails("FUBU's new Windbreaker. Orange like an orange.");
+        p1.setDateAdded(Instant.now().toEpochMilli());
+        p1.setImageLocation("orangeFUBUWindbreaker.png");
+        p1.setStock(5);
+
+        productService.addProducts(p1);
+        //have to test the add categories thru restapi impl with postman
+
     }
 
 }
