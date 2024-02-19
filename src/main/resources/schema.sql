@@ -42,7 +42,7 @@ CREATE TABLE `product` (
   `id` int NOT NULL AUTO_INCREMENT,
   `category` varchar(255) DEFAULT NULL,
   `date_added` bigint NOT NULL,
-  `details` varchar(255) DEFAULT NULL,
+  `details` TEXT DEFAULT NULL,
   `image_location` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `price` double NOT NULL,
