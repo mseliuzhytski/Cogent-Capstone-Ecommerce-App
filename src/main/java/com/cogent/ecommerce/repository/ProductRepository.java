@@ -41,6 +41,12 @@ public class ProductRepository {
         return product;
     }
 
+    public void saveProducts(List<Product> products) {
+        for (Product product : products) {
+            em.persist(product);
+        }
+    }
+
     public Product updateProduct(Product product, int id) {
         product.setId(id);
         em.merge(product);
