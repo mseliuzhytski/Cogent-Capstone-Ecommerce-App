@@ -11,11 +11,11 @@ public class Account {
     private int id;
 
     private String username;
-    private String password;
+//    private String password;
 
     private String email;
-    private boolean isUser;
-    private boolean isAdmin;
+//    private boolean isUser;
+//    private boolean isAdmin;
 
     @ManyToOne
     private Discount discount;
@@ -44,13 +44,13 @@ public class Account {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
 
     public String getEmail() {
         return email;
@@ -60,19 +60,19 @@ public class Account {
         this.email = email;
     }
 
-    public boolean isUser() {
-        return isUser;
-    }
-
-    public void setUser(boolean user) {
-        isUser = user;
-    }
-
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
-    }
+//    public boolean isUser() {
+//        return isUser;
+//    }
+//
+//    public void setUser(boolean user) {
+//        isUser = user;
+//    }
+//
+//    public boolean isAdmin() {
+//        return isAdmin;
+//    }
+//
+//    public void setAdmin(boolean admin) {
+//        isAdmin = admin;
+//    }
 }

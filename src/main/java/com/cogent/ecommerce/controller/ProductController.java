@@ -2,34 +2,19 @@ package com.cogent.ecommerce.controller;
 
 import com.cogent.ecommerce.model.Product;
 import com.cogent.ecommerce.repository.ProductRepository;
-import com.cogent.ecommerce.service.BulkUploadService;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private BulkUploadService bulkUploadService;
 
     @GetMapping(value="/product/list")
     public List<Product> getProducts() {
@@ -94,62 +79,5 @@ public class ProductController {
         }
     }
 
-    /**
-     * https://howtodoinjava.com/spring-boot/spring-boot-file-upload-rest-api/
-     */
-
-    public final static String UPLOAD_FOLDER = "Files-Upload";
-
-    public static String saveFile(String fileName, MultipartFile multipartFile)
-            throws IOException {
-        Path uploadPath = Paths.get(UPLOAD_FOLDER);
-
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-        String fileCode = RandomStringUtils.randomAlphanumeric(8);
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            Path filePath = uploadPath.resolve(fileCode + "-" + fileName);
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException ioe) {
-            throw new IOException("Could not save file: " + fileName, ioe);
-        }
-        String filename = UPLOAD_FOLDER + "/" + fileCode + "-" + fileName;
-        return filename;
-    }
-
-    @PostMapping("/bulk-upload")
-    public ResponseEntity<Map<String, String>> csvUploadFile(
-            @RequestParam("file") MultipartFile file) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        long size = file.getSize();
-
-        String excelFile = saveFile(fileName, file);
-
-        String errorMessage = "";
-        try {
-            bulkUploadService.bulkUpload(excelFile);
-        } catch (BulkUploadService.CsvParseException e) {
-            System.out.println("--- Could not perform bulk upload ---");
-            System.err.println(e.getMessage());
-            errorMessage = e.getMessage();
-        }
-
-        Map<String, String> map = new HashMap<>();
-
-        // Populate the map with file details
-        map.put("fileName", file.getOriginalFilename());
-        map.put("fileSize", file.getSize() + "");
-        map.put("fileContentType", file.getContentType());
-        map.put("downloadUri", excelFile);
-        if (!errorMessage.equals("")) {
-            map.put("errorMessage", errorMessage);
-        }
-        if (errorMessage.equals("")) {
-            return ResponseEntity.ok(map);
-        } else {
-            return ResponseEntity.badRequest().body(map);
-        }
-    }
 
 }
