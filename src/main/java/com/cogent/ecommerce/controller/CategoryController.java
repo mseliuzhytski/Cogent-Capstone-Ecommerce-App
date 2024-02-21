@@ -19,7 +19,7 @@ public class CategoryController {
     public List<Category> getCategory() {
         return categoryService.getAllCategories();
     }
-    @PostMapping("/getCategory")
+    @PostMapping("/addCategory")
     public ResponseEntity<?> addCategory(@RequestBody Category category) {
         if(categoryService.getCategoryById(category.getId()).isPresent()){
             return ResponseEntity.badRequest().body("Category Exists");
