@@ -52,7 +52,7 @@ public class JWTSecurityConfig {
         httpSecurity.sessionManagement(session->session.disable());
         httpSecurity.csrf().disable();
         httpSecurity.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-        httpSecurity.authorizeRequests().requestMatchers("/signUp").permitAll()
+        httpSecurity.authorizeRequests().requestMatchers("/signUp","/products/get**").permitAll()
                 .anyRequest().authenticated();
         httpSecurity.authenticationProvider(authenticationProvider());
 
