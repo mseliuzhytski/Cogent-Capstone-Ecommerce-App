@@ -18,7 +18,7 @@ public class Product {
 
     private int stock;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "product_category",
             joinColumns = @JoinColumn(name = "product_id"),

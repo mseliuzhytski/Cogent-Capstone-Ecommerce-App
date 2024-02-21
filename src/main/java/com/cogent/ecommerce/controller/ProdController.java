@@ -56,12 +56,23 @@ public class ProdController {
         return ResponseEntity.ok().body(productService.getProductById(id));
     }
 
-    @DeleteMapping("removeCategory/{productId}/{categoryId}")
+    @DeleteMapping("/removeCategory/{productId}/{categoryId}")
     public ResponseEntity<?> removeCategoryFromProduct(@PathVariable int productId, @PathVariable int categoryId){
 
         productService.deleteCategoryFromProduct(productId,categoryId);
 
         return ResponseEntity.ok().body("Deleted Category from product");
+    }
+
+    @DeleteMapping("/removeProduct/{id}")
+    public ResponseEntity<?> removeProduct(@PathVariable int id){
+
+        if(productService.getProductById(id).isEmpty()){
+            return ResponseEntity.badRequest().body("Product at that id does not exist");
+        }
+
+        productService.deleteProduct(id);
+        return ResponseEntity.ok().body("Deleted Product");
     }
     //need to create categories contrller !!!
 
