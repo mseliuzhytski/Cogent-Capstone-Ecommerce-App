@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProductService {
@@ -32,8 +33,22 @@ public class ProductService {
         return productJpaRepository.save(product);
     }
 
-    public void deleteProduct(int id){
-        productJpaRepository.deleteById(id);
+    public boolean deleteProduct(int id){
+
+        Product productToRemove = productJpaRepository.findById(id).orElse(null);
+
+        if(productToRemove!=null){
+
+            Set<Category> categories = productToRemove.getCategoriesList();
+            for(Category category:categories){
+                category.getProductList().remove(productToRemove);
+                categoryJpaRepository.save(category);
+            }
+            productJpaRepository.deleteById(id);
+            return true;
+        }
+
+        return false;
     }
 
     public boolean addCategoryToProduct(int productId, int categoryId){
@@ -42,20 +57,27 @@ public class ProductService {
 
         if(product!=null && category!=null){
             product.getCategoriesList().add(category);
+            category.getProductList().add(product);
             productJpaRepository.save(product);
+            categoryJpaRepository.save(category);
             return true;
         }
         return false;
     }
 
-    public void deleteCategoryFromProduct(int productId, int categoryId){
+    public boolean deleteCategoryFromProduct(int productId, int categoryId){
         Product product = productJpaRepository.findById(productId).orElse(null);
         Category category = categoryJpaRepository.findById(categoryId).orElse(null);
 
         if(product!=null && category!=null){
             product.getCategoriesList().remove(category);
+            category.getProductList().remove(product);
             productJpaRepository.save(product);
+            categoryJpaRepository.save(category);
+            return true;
         }
+
+        return false;
     }
 
 }

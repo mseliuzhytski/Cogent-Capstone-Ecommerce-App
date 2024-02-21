@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CategoryService {
@@ -32,8 +33,22 @@ public class CategoryService {
         return categoryJpaRepository.save(category);
     }
 
-    public void deleteCategory(int id){
-        categoryJpaRepository.deleteById(id);
+    public boolean deleteCategory(int id){
+
+        Category categoryToRemove = categoryJpaRepository.findById(id).orElse(null);
+
+
+        if(categoryToRemove!=null) {
+            Set<Product> products = categoryToRemove.getProductList();
+            for (Product product : products) {
+                product.getCategoriesList().remove(categoryToRemove);
+                productJpaRepository.save(product);
+            }
+            categoryJpaRepository.deleteById(id);
+            return true;
+        }
+
+        return false;
     }
 
 }

@@ -24,18 +24,15 @@ public class CategoryController {
         if(categoryService.getCategoryById(category.getId()).isPresent()){
             return ResponseEntity.badRequest().body("Category Exists");
         }
-        categoryService.addCategory(category);
-        return ResponseEntity.ok().body(category);
+
+        return ResponseEntity.ok().body(categoryService.addCategory(category));
     }
 
+    //will not work until bidirectional many to many added-->next task so we can remove categories and it will remove product ref to that cat;
     @DeleteMapping("/deleteCategory/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable int id){
 
-        if(categoryService.getCategoryById(id).isEmpty()){
-            return ResponseEntity.badRequest().body("Category does not exist");
-        }
-        categoryService.deleteCategory(id);
-        return ResponseEntity.ok().body("Deleted Category");
+        return ResponseEntity.ok().body(categoryService.deleteCategory(id));
 
     }
 

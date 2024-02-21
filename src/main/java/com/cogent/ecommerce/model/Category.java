@@ -1,9 +1,9 @@
 package com.cogent.ecommerce.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
 public class Category {
@@ -14,6 +14,11 @@ public class Category {
     private int id;
 
     private String name;
+
+//    TESTING PURPOSES -MAY NOT BE NEEDED
+    @ManyToMany(mappedBy = "categoriesList")
+    @JsonIgnore
+    private Set<Product> productList;
 
     public int getId() {
         return id;
@@ -29,5 +34,14 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    public Set<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(Set<Product> productList) {
+        this.productList = productList;
     }
 }
