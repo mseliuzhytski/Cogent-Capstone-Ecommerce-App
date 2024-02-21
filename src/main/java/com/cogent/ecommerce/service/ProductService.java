@@ -36,14 +36,16 @@ public class ProductService {
         productJpaRepository.deleteById(id);
     }
 
-    public void addCategoryToProduct(int productId, int categoryId){
+    public boolean addCategoryToProduct(int productId, int categoryId){
         Product product = productJpaRepository.findById(productId).orElse(null);
         Category category = categoryJpaRepository.findById(categoryId).orElse(null);
 
         if(product!=null && category!=null){
             product.getCategoriesList().add(category);
             productJpaRepository.save(product);
+            return true;
         }
+        return false;
     }
 
     public void deleteCategoryFromProduct(int productId, int categoryId){
