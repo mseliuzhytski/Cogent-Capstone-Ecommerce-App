@@ -7,6 +7,7 @@ import com.cogent.ecommerce.repository.SalesRepository;
 import com.cogent.ecommerce.model.*;
 import com.cogent.ecommerce.service.CategoryService;
 import com.cogent.ecommerce.service.ProductService;
+import com.cogent.ecommerce.service.BulkUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,11 @@ public class DatabaseLoader {
     @Autowired
     private DiscountRepository discountRepository;
 
+    @Autowired
+    private BulkUploadService bulkUploadService;
+
+    public final static String BULK_UPLOAD_FILE = "src/main/resources/bulk_upload.xlsx";
+
     public void loadSeededData() {
         try {
             loadAccounts();
@@ -38,8 +44,18 @@ public class DatabaseLoader {
             loadWishlist();
             loadSalesItem();
             loadDiscount();
+            bulkUpload();
         } catch (DataAccessException ex) {
             System.err.println(ex.getMessage());
+        }
+    }
+
+    public void bulkUpload() {
+        try {
+            bulkUploadService.bulkUpload(BULK_UPLOAD_FILE);
+        } catch (BulkUploadService.CsvParseException e) {
+            System.out.println("--- Could not perform bulk upload ---");
+            System.err.println(e.getMessage());
         }
     }
 
