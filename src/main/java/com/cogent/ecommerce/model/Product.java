@@ -2,6 +2,9 @@ package com.cogent.ecommerce.model;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 public class Product {
 
@@ -16,7 +19,12 @@ public class Product {
 
     private int stock;
 
-    private String category;
+    @ManyToMany
+    @JoinTable(
+            name = "product_category",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categoriesList;
 
     private String details;
 
@@ -56,12 +64,15 @@ public class Product {
         this.stock = stock;
     }
 
-    public String getCategory() {
-        return category;
+    public Set<Category> getCategoriesList() {
+        if (categoriesList == null) {
+            categoriesList = new HashSet<>();
+        }
+        return categoriesList;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategoriesList(Set<Category> categoriesList) {
+        this.categoriesList = categoriesList;
     }
 
     public String getDetails() {

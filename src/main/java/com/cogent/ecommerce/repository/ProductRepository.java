@@ -18,7 +18,7 @@ import java.util.Optional;
 public class ProductRepository {
 
     @Autowired
-    private ProductCrudRepository dao;
+    private ProductJpaRepository dao;
     @PersistenceContext
     private EntityManager em;
 

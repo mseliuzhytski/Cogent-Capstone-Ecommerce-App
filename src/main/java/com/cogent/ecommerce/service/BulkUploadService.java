@@ -1,5 +1,6 @@
 package com.cogent.ecommerce.service;
 
+import com.cogent.ecommerce.model.Category;
 import com.cogent.ecommerce.model.Product;
 import com.cogent.ecommerce.repository.ProductRepository;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -29,17 +30,28 @@ public class BulkUploadService {
     @Autowired
     private ProductRepository repository;
 
-    public void bulkUpload(String excelFile) throws CsvParseException {
-        List<Product> products = bulkUploadGetProducts(excelFile);
-        repository.saveProducts(products);
+    @Autowired
+    private ProductService productService;
+
+    public static class ProductCategoryDTO {
+        private Product product;
+        private String categoryName;
     }
 
-    public List<Product> bulkUploadGetProducts(String excelFile) throws CsvParseException {
+    public void bulkUpload(String excelFile) throws CsvParseException {
+        List<ProductCategoryDTO> products = bulkUploadGetProducts(excelFile);
+        for (ProductCategoryDTO product : products) {
+            repository.saveProduct(product.product);
+            productService.addCategoryToProduct(product.product, product.categoryName);
+        }
+    }
+
+    public List<ProductCategoryDTO> bulkUploadGetProducts(String excelFile) throws CsvParseException {
         XSSFWorkbook workbook = null;
         try {
             workbook = new XSSFWorkbook(new File(excelFile));
             XSSFSheet userSheet = workbook.getSheetAt(0);
-            List<Product> products = parseProducts(userSheet);
+            List<ProductCategoryDTO> products = parseProducts(userSheet);
             return products;
         } catch (IOException e) {
             throw new CsvParseException(e.getMessage());
@@ -76,8 +88,8 @@ public class BulkUploadService {
         }
     }
 
-    public List<Product> parseProducts(XSSFSheet sheet) throws CsvParseException {
-        List<Product> products = new LinkedList<>();
+    public List<ProductCategoryDTO> parseProducts(XSSFSheet sheet) throws CsvParseException {
+        List<ProductCategoryDTO> products = new LinkedList<>();
         int rowNumber = 1;
         while (true) {
             XSSFRow row = sheet.getRow(rowNumber);
@@ -98,11 +110,16 @@ public class BulkUploadService {
             product.setName(name);
             product.setPrice(price);
             product.setStock(stock);
-            product.setCategory(category);
+//            product.setCategory(category);
+
             product.setImageLocation(imageLocation);
             product.setDetails(details);
             product.setDateAdded(Instant.now().toEpochMilli());
-            products.add(product);
+
+            ProductCategoryDTO dto = new ProductCategoryDTO();
+            dto.product = product;
+            dto.categoryName = category;
+            products.add(dto);
             rowNumber++;
         }
         return products;
