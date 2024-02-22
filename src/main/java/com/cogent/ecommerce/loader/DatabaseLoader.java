@@ -36,18 +36,33 @@ public class DatabaseLoader {
 
     public final static String BULK_UPLOAD_FILE = "src/main/resources/bulk_upload.xlsx";
 
-    public void loadSeededData() {
-        try {
-            loadAccounts();
-            loadProducts();
-            loadPurchaseOrders();
-            loadWishlist();
-            loadSalesItem();
-            loadDiscount();
-            bulkUpload();
-        } catch (DataAccessException ex) {
-            System.err.println(ex.getMessage());
-        }
+    public void loadSeededData() throws DataAccessException {
+        loadAccounts();
+        loadCategories();
+        loadProducts();
+        loadPurchaseOrders();
+        loadWishlist();
+        loadSalesItem();
+        loadDiscount();
+        bulkUpload();
+    }
+
+    public void loadCategories() {
+        Category category = new Category();
+        category.setName("Office Supplies");
+        categoryService.addCategory(category);
+
+        category = new Category();
+        category.setName("Books");
+        categoryService.addCategory(category);
+
+//        category = new Category();
+//        category.setName("Games");
+//        categoryService.addCategory(category);
+//
+//        category = new Category();
+//        category.setName("Produce");
+//        categoryService.addCategory(category);
     }
 
     public void bulkUpload() {
@@ -146,12 +161,14 @@ public class DatabaseLoader {
         Product product = new Product();
         product.setName("Pencil");
         //product.setCategory("Office Supplies");
+        product.setCategoriesList(new HashSet<>());
         product.setPrice(1.99);
         product.setDateAdded(Instant.now().toEpochMilli());
         product.setImageLocation("pencil.jpg");
         product.setStock(10);
 
         productRepository.saveProduct(product);
+        productService.addCategoryToProduct(product, "Office Supplies");
 
         product = new Product();
         product.setName("Eraser");
@@ -162,6 +179,7 @@ public class DatabaseLoader {
         product.setStock(10);
 
         productRepository.saveProduct(product);
+        productService.addCategoryToProduct(product, "Office Supplies");
     }
 
     @Autowired

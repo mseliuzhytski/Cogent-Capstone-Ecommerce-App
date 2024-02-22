@@ -10,4 +10,6 @@ import java.util.Set;
 @Repository
 public interface CategoryJpaRepository extends JpaRepository<Category,Integer> {
 
+    Category findByName(String name);
+
 }

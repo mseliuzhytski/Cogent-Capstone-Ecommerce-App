@@ -2,6 +2,7 @@ package com.cogent.ecommerce.model;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -64,6 +65,9 @@ public class Product {
     }
 
     public Set<Category> getCategoriesList() {
+        if (categoriesList == null) {
+            categoriesList = new HashSet<>();
+        }
         return categoriesList;
     }
 

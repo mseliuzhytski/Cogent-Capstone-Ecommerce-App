@@ -29,6 +29,10 @@ public class CategoryService {
         return categoryJpaRepository.findById(id);
     }
 
+    public Category getCategoryByName(String name) {
+        return categoryJpaRepository.findByName(name);
+    }
+
     public Category addCategory(Category category){
         return categoryJpaRepository.save(category);
     }

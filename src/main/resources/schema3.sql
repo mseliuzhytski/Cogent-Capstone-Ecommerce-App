@@ -4,21 +4,12 @@
 -- ------------------------------------------------------
 -- Server version	8.0.33
 
-DROP TABLE IF EXISTS `custom_user`;
 DROP TABLE IF EXISTS `purchase_order`;
-DROP TABLE IF EXISTS `product_category`;
 DROP TABLE IF EXISTS `sales_item`;
 DROP TABLE IF EXISTS `wishlist`;
 DROP TABLE IF EXISTS `account`;
-DROP TABLE IF EXISTS `category`;
 DROP TABLE IF EXISTS `discount`;
 DROP TABLE IF EXISTS `product`;
-
-CREATE TABLE `category` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `discount` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -27,15 +18,6 @@ CREATE TABLE `discount` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `custom_user` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `discount_code` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `role` enum('USER','ADMIN') DEFAULT NULL,
-  `username` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -68,14 +50,6 @@ CREATE TABLE `product` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `product_category` (
-  `product_id` int NOT NULL,
-  `category_id` int NOT NULL,
-  PRIMARY KEY (`product_id`,`category_id`),
-  KEY `FKkud35ls1d40wpjb5htpp14q4e` (`category_id`),
-  CONSTRAINT `FK2k3smhbruedlcrvu6clued06x` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
-  CONSTRAINT `FKkud35ls1d40wpjb5htpp14q4e` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -122,10 +96,7 @@ CREATE TABLE `wishlist` (
   CONSTRAINT account_product UNIQUE (account_id, product_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-ALTER TABLE category AUTO_INCREMENT=0;
-ALTER TABLE custom_user AUTO_INCREMENT=0;
 ALTER TABLE purchase_order AUTO_INCREMENT=0;
-ALTER TABLE product_category AUTO_INCREMENT=0;
 ALTER TABLE sales_item AUTO_INCREMENT=0;
 ALTER TABLE wishlist AUTO_INCREMENT=0;
 ALTER TABLE account AUTO_INCREMENT=0;

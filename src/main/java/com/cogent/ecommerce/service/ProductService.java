@@ -51,6 +51,18 @@ public class ProductService {
         return false;
     }
 
+    public boolean addCategoryToProduct(Product product, String categoryName) {
+        Category category = categoryJpaRepository.findByName(categoryName);
+        if (category == null) {
+            category = new Category();
+            category.setName(categoryName);
+            categoryJpaRepository.save(category);
+        }
+        product.getCategoriesList().add(category);
+        categoryJpaRepository.save(category);
+        return true;
+    }
+
     public boolean addCategoryToProduct(int productId, int categoryId){
         Product product = productJpaRepository.findById(productId).orElse(null);
         Category category = categoryJpaRepository.findById(categoryId).orElse(null);
