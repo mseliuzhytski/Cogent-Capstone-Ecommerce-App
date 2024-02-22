@@ -34,7 +34,7 @@ public class JwtService {
 
     protected String createToken(Authentication auth) {
         var claims = JwtClaimsSet.builder().issuer("self").issuedAt(Instant.now())
-                .expiresAt(Instant.now().plusSeconds(60*20))
+                .expiresAt(Instant.now().plusSeconds(60*60))
                 .subject(auth.getName())
                 .claim("scope",createScope(auth)).build();
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
