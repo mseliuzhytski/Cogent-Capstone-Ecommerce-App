@@ -102,7 +102,7 @@ public class ProductController {
 
     public final static String UPLOAD_FOLDER = "Files-Upload";
 
-    public final static String IMAGES_FOLDER = "static/";
+    public final static String IMAGES_FOLDER = "public/";
 
 
     public static String saveFile(String fileName, MultipartFile multipartFile, String folder)
