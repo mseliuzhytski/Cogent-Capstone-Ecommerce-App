@@ -52,7 +52,7 @@ public class ProductController {
         }
     }
 
-    @PostMapping(value="/product/")
+    @PostMapping(value="/product")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         Product p = null;
         try {
