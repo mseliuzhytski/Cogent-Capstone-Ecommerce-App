@@ -74,8 +74,9 @@ public class ProductController {
         } catch (DataIntegrityViolationException ex) {
             ex.printStackTrace();
         }
+        System.out.println("Product " + p);
         if (p != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(p);
+            return ResponseEntity.status(HttpStatus.OK).build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
