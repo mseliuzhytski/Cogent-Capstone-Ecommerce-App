@@ -1,5 +1,7 @@
 package com.cogent.ecommerce.security;
 
+import com.cogent.ecommerce.User.CustomUser;
+import com.cogent.ecommerce.User.UserRepository;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -21,6 +23,8 @@ import java.time.Instant;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+//creates and checks jwt tokens
+
 @Service
 public class JwtService {
 
@@ -29,14 +33,22 @@ public class JwtService {
 
     @Autowired
     private JwtDecoder jwtDecoder;
+//
+//    @Autowired
+//    private UserRepository userRepository;
 
     //HANDLING TOKEN CREATION:
 
     protected String createToken(Authentication auth) {
+
+//        CustomUser user = userRepository.findByUsername(auth.getName()).orElse(null);
+//        System.out.println(user.getId());
+
         var claims = JwtClaimsSet.builder().issuer("self").issuedAt(Instant.now())
                 .expiresAt(Instant.now().plusSeconds(60*60))
                 .subject(auth.getName())
-                .claim("scope",createScope(auth)).build();
+                .claim("scope",createScope(auth))
+                .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
@@ -48,9 +60,20 @@ public class JwtService {
     public boolean isValidToken(String token) {
         try{
             jwtDecoder.decode(token);
+            //System.out.println(jwtDecoder.decode(token).getClaims().get("sub"));
             return true;
         }catch (JwtException e){
             return false;
+        }
+    }
+
+    public String getUsernameFromToken(String token){
+        try{
+            jwtDecoder.decode(token);
+            //System.out.println(jwtDecoder.decode(token).getClaims().get("sub"));
+            return jwtDecoder.decode(token).getClaims().get("sub").toString();
+        }catch (JwtException e){
+            return null;
         }
     }
 
