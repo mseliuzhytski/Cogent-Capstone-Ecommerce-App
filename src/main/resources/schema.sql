@@ -34,6 +34,8 @@ CREATE TABLE `custom_user` (
   `password` varchar(255) DEFAULT NULL,
   `role` enum('USER','ADMIN') DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
+  `reset_expiry_time` datetime(6) DEFAULT NULL,
+  `reset_token` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
