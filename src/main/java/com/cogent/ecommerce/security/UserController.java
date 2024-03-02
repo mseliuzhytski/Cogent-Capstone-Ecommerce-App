@@ -41,14 +41,20 @@ public class UserController {
 
     @GetMapping("/checkToken")
     public ResponseEntity<Boolean> checkTokenValidity(@RequestHeader("Authorization") String authHeader){
-        String token = authHeader;
+        String token = authHeader.substring(7);
 
-        System.out.println("About to check validity");
         boolean checkValid = jwtService.isValidToken(token);
-        System.out.println("Is Valid token " + checkValid);
 
         if(!checkValid) return ResponseEntity.ok(false);
         return ResponseEntity.ok(true);
+    }
+
+    @GetMapping("/getUsername")
+    public ResponseEntity<?> getUsernameFromToken(@RequestHeader("Authorization") String authHeader){
+        String token = authHeader.substring(7);
+        String username = jwtService.getUsernameFromToken(token);
+        if(username==null)  return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(username);
     }
 
 }

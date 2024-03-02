@@ -2,6 +2,8 @@ package com.cogent.ecommerce.controller;
 
 import com.cogent.ecommerce.model.Account;
 import com.cogent.ecommerce.model.Product;
+import com.cogent.ecommerce.security.AuthService;
+import com.cogent.ecommerce.security.JwtService;
 import com.cogent.ecommerce.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,6 +19,12 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private JwtService jwtService;
 
     @GetMapping(value="/account/list")
     public List<Account> getAccounts() {
@@ -83,6 +91,16 @@ public class AccountController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @GetMapping("/getAccountFromToken")
+    public ResponseEntity<?> getUsernameFromToken(@RequestHeader("Authorization") String authHeader){
+        String token = authHeader.substring(7);
+        String username = jwtService.getUsernameFromToken(token);
+        if(username==null)  return ResponseEntity.badRequest().body(null);
+        Account account = accountService.getAccountByUsername(username);
+        if (account == null) return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(account);
     }
 
 }
