@@ -28,7 +28,7 @@ public class UserController {
         System.out.println(user.getUsername());
         System.out.println(user.getEmail());
 
-        boolean register = authService.register(user);
+        boolean register = authService.registerUser(user);
         if(!register) return ResponseEntity.badRequest().body(false);
         return ResponseEntity.ok(true);
     }
@@ -43,7 +43,9 @@ public class UserController {
     public ResponseEntity<Boolean> checkTokenValidity(@RequestHeader("Authorization") String authHeader){
         String token = authHeader;
 
+        System.out.println("About to check validity");
         boolean checkValid = jwtService.isValidToken(token);
+        System.out.println("Is Valid token " + checkValid);
 
         if(!checkValid) return ResponseEntity.ok(false);
         return ResponseEntity.ok(true);

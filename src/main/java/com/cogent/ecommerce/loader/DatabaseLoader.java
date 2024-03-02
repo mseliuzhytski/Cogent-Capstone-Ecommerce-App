@@ -1,14 +1,14 @@
 package com.cogent.ecommerce.loader;
 
-import com.cogent.ecommerce.repository.AccountRepository;
-import com.cogent.ecommerce.repository.DiscountRepository;
-import com.cogent.ecommerce.repository.ProductRepository;
-import com.cogent.ecommerce.repository.SalesRepository;
+import com.cogent.ecommerce.repository.*;
 import com.cogent.ecommerce.model.*;
+import com.cogent.ecommerce.security.AuthService;
+import com.cogent.ecommerce.security.RegisterRequest;
 import com.cogent.ecommerce.service.CategoryService;
 import com.cogent.ecommerce.service.ProductService;
 import com.cogent.ecommerce.service.BulkUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +23,9 @@ public class DatabaseLoader {
     private AccountRepository accountRepository;
 
     @Autowired
+    private AccountJpaRepository accountJpaRepository;
+
+    @Autowired
     private ProductRepository productRepository;
 
     @Autowired
@@ -33,6 +36,28 @@ public class DatabaseLoader {
 
     @Autowired
     private BulkUploadService bulkUploadService;
+
+    @Autowired
+    private AuthService authService;
+
+    @Value( "${admin.username}" )
+	private String adminUsername;
+
+    @Value( "${admin.password}" )
+    private String adminPassword;
+
+    @Value( "${admin.email}" )
+    private String adminEmail;
+
+    @Value( "${user.username}" )
+    private String userUsername;
+
+    @Value( "${user.password}" )
+    private String userPassword;
+
+    @Value( "${user.email}" )
+    private String userEmail;
+
 
     public final static String BULK_UPLOAD_FILE = "src/main/resources/bulk_upload.xlsx";
 
@@ -79,6 +104,19 @@ public class DatabaseLoader {
         discount.setDiscountCode("abc");
         discount.setDiscountPercent(15);
         discountRepository.saveDiscount(discount);
+
+        RegisterRequest request =
+                RegisterRequest
+                        .builder()
+                        .username(userUsername)
+                        .password(userPassword)
+                        .email(userEmail).build();
+        if (!authService.registerUser(request)) {
+            System.err.println("There was an error creating the user");
+        }
+        Account account = accountJpaRepository.getAccountByUsername(userUsername);
+        account.setDiscount(discount);
+        accountRepository.saveAccount(account);
     }
 
     public void loadSalesItem() {
@@ -139,21 +177,26 @@ public class DatabaseLoader {
     }
 
     public void loadAccounts() {
-        Account account = new Account();
-        account.setAdmin(false);
-        account.setUser(true);
-        account.setUsername("user");
-        account.setEmail("user1@gmail.com");
-        account.setPassword("abc123");
-        accountRepository.saveAccount(account);
+//        Account account = new Account();
+//        account.setAdmin(false);
+//        account.setUser(true);
+//        account.setUsername("user");
+//        account.setEmail("user1@gmail.com");
+//        account.setPassword("abc123");
+//        accountRepository.saveAccount(account);
+//
+//        account = new Account();
+//        account.setAdmin(true);
+//        account.setUser(true);
+//        account.setUsername("admin");
+//        account.setEmail("admin1@gmail.com");
+//        account.setPassword("abc123");
+//        accountRepository.saveAccount(account);
 
-        account = new Account();
-        account.setAdmin(true);
-        account.setUser(true);
-        account.setUsername("admin");
-        account.setEmail("admin1@gmail.com");
-        account.setPassword("abc123");
-        accountRepository.saveAccount(account);
+        RegisterRequest request = RegisterRequest
+                .builder().username(adminUsername).password(adminPassword)
+                .email(adminEmail).build();
+        authService.registerAdmin(request);
     }
 
     private void loadProducts() {

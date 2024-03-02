@@ -40,6 +40,13 @@ public class CustomUser implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    public int getId() {
+        return id;
+    }
+    public Role getRole() {
+        return role;
+    }
+
     public String getEmail() {
         return email;
     }
