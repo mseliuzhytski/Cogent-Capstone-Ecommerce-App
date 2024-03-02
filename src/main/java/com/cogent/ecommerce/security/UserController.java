@@ -48,6 +48,7 @@ public class UserController {
         accountService.addAccount(account);
         return ResponseEntity.ok(true);
     }
+    //TODO: ADMIN REGISTER METHOD
 
     //this is checked by the security filter chain ->
     // if the username and password are correct this will allow this request to go through

@@ -92,4 +92,13 @@ public class ProductService {
         return false;
     }
 
+    public void updateStock(Product product){
+        productJpaRepository.save(product);
+    }
+
+    //not necessary
+//    public Product addProductWithCategories(Product product, Set<Category> categories){
+//        return null;
+//    }
+
 }

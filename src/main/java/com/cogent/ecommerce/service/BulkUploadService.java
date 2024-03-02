@@ -111,6 +111,7 @@ public class BulkUploadService {
             product.setPrice(price);
             product.setStock(stock);
 //            product.setCategory(category);
+           // product.setCategory(category);
 
             product.setImageLocation(imageLocation);
             product.setDetails(details);

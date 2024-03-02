@@ -6,6 +6,7 @@ import com.cogent.ecommerce.model.PurchaseOrder;
 import com.cogent.ecommerce.repository.AccountJpaRepository;
 import com.cogent.ecommerce.repository.ProductJpaRepository;
 import com.cogent.ecommerce.repository.PurchaseOrderJpaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +71,13 @@ public class PurchaseOrderService {
             return true;
         }
         return false;
+    }
+
+    @Transactional
+    public void clearCart(int accountId){
+
+        purchaseOrderJpaRepository.deleteByAccountId(accountId);
+
     }
 
 

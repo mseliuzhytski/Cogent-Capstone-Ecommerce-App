@@ -30,6 +30,7 @@ public class AuthService {
     private JwtService jwtService;
 
     //boolean since it is just registering not creating a token
+    //registering a user account
     public boolean register(RegisterRequest request){
 
         if(userRepository.existsByUsername(request.getUsername())){
@@ -48,6 +49,22 @@ public class AuthService {
 
 //        var jwtToken = jwtService.generateToken(user);
 
+        return true;
+    }
+    //registering an admin account
+    public boolean registerAdmin(RegisterRequest request){
+        if(userRepository.existsByUsername(request.getUsername())){
+            return false;
+        }
+        if(userRepository.existsByEmail(request.getEmail())){
+            return false;
+        }
+        var user = CustomUser.builder().email(request.getEmail())
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.ADMIN)
+                .build();
+        userRepository.save(user);
         return true;
     }
 

@@ -14,4 +14,6 @@ public interface PurchaseOrderJpaRepository extends JpaRepository<PurchaseOrder,
 
     Optional<PurchaseOrder> findByAccountIdAndProductId(int accountId,int productId);
 
+    void deleteByAccountId(int accountId);
+
 }
