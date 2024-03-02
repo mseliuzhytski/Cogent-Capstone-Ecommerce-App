@@ -54,5 +54,15 @@ public class JwtService {
         }
     }
 
+    public String getUsernameFromToken(String token){
+        try{
+            jwtDecoder.decode(token);
+            //System.out.println(jwtDecoder.decode(token).getClaims().get("sub"));
+            return jwtDecoder.decode(token).getClaims().get("sub").toString();
+        }catch (JwtException e){
+            return null;
+        }
+    }
+
 
 }

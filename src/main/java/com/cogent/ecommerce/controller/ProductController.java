@@ -3,6 +3,7 @@ package com.cogent.ecommerce.controller;
 import com.cogent.ecommerce.model.Product;
 import com.cogent.ecommerce.repository.ProductRepository;
 import com.cogent.ecommerce.service.BulkUploadService;
+import com.cogent.ecommerce.service.FilenameObject;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin
 public class ProductController {
 
     @Autowired
@@ -50,7 +52,7 @@ public class ProductController {
         }
     }
 
-    @PostMapping(value="/product/")
+    @PostMapping(value="/product")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         Product p = null;
         try {
@@ -72,8 +74,9 @@ public class ProductController {
         } catch (DataIntegrityViolationException ex) {
             ex.printStackTrace();
         }
+        System.out.println("Product " + p);
         if (p != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(p);
+            return ResponseEntity.status(HttpStatus.OK).build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -100,9 +103,12 @@ public class ProductController {
 
     public final static String UPLOAD_FOLDER = "Files-Upload";
 
-    public static String saveFile(String fileName, MultipartFile multipartFile)
+    public final static String IMAGES_FOLDER = "public/";
+
+
+    public static String saveFile(String fileName, MultipartFile multipartFile, String folder)
             throws IOException {
-        Path uploadPath = Paths.get(UPLOAD_FOLDER);
+        Path uploadPath = Paths.get(folder);
 
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
@@ -114,8 +120,26 @@ public class ProductController {
         } catch (IOException ioe) {
             throw new IOException("Could not save file: " + fileName, ioe);
         }
-        String filename = UPLOAD_FOLDER + "/" + fileCode + "-" + fileName;
+        String filename = folder + "/" + fileCode + "-" + fileName;
         return filename;
+    }
+
+    @PostMapping("/upload-image")
+    public ResponseEntity uploadImage(@RequestParam("file") MultipartFile file) {
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        FilenameObject fObject = new FilenameObject();
+
+        try {
+            String completeFilename = saveFile(fileName, file, IMAGES_FOLDER);
+            String[] splits = completeFilename.split("//");
+            String abbreviatedFilename = splits[splits.length-1];
+            fObject.setFilename(completeFilename);
+            fObject.setAbbreviatedFilename(abbreviatedFilename);
+            return ResponseEntity.ok(fObject);
+        } catch (IOException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Could not save filename " + fileName);
+        }
     }
 
     @PostMapping("/bulk-upload")
@@ -124,7 +148,7 @@ public class ProductController {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         long size = file.getSize();
 
-        String excelFile = saveFile(fileName, file);
+        String excelFile = saveFile(fileName, file, UPLOAD_FOLDER);
 
         String errorMessage = "";
         try {

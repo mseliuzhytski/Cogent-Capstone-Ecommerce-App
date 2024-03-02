@@ -28,7 +28,7 @@ public class UserController {
         System.out.println(user.getUsername());
         System.out.println(user.getEmail());
 
-        boolean register = authService.register(user);
+        boolean register = authService.registerUser(user);
         if(!register) return ResponseEntity.badRequest().body(false);
         return ResponseEntity.ok(true);
     }
@@ -41,12 +41,20 @@ public class UserController {
 
     @GetMapping("/checkToken")
     public ResponseEntity<Boolean> checkTokenValidity(@RequestHeader("Authorization") String authHeader){
-        String token = authHeader;
+        String token = authHeader.substring(7);
 
         boolean checkValid = jwtService.isValidToken(token);
 
         if(!checkValid) return ResponseEntity.ok(false);
         return ResponseEntity.ok(true);
+    }
+
+    @GetMapping("/getUsername")
+    public ResponseEntity<?> getUsernameFromToken(@RequestHeader("Authorization") String authHeader){
+        String token = authHeader.substring(7);
+        String username = jwtService.getUsernameFromToken(token);
+        if(username==null)  return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(username);
     }
 
 }
