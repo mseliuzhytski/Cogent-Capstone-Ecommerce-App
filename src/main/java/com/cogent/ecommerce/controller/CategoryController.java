@@ -13,6 +13,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 public class CategoryController {
 
+    //TODO: FOR SECURITY THESE NEED TO ONLY BE ACCESSIBLE TO ADMINS
     @Autowired
     CategoryService categoryService;
 

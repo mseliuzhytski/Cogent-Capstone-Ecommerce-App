@@ -10,6 +10,8 @@ public interface UserRepository extends JpaRepository<CustomUser, Integer> {
 
     Optional<CustomUser> findByEmail(String email);
 
+    Optional<CustomUser> findByEmailAndResetToken(String email, String resetToken);
+
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
 

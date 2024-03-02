@@ -9,12 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/products")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ProdController {
 
+    //TODO: FOR SECURITY THESE NEED TO ONLY BE ACCESSIBLE TO ADMINS
 
     @Autowired
     ProductService productService;
@@ -75,5 +77,10 @@ public class ProdController {
     }
     //need to create categories contrller !!!
 
+//    @PostMapping("/addWithCategories")
+//    public ResponseEntity<?> addProductWithCategories(@RequestBody ProductWithCategoryDTO productWithCategories){
+//        return ResponseEntity.ok().body(productService.addProductWithCategories(productWithCategories.getProduct(),
+//                productWithCategories.getCategories()));
+//    }
 
 }

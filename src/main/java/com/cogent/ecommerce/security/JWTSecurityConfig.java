@@ -37,6 +37,11 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
+//security config file: used to enable security on spring endpoints/requests ->
+// sets up both jwt configuration and authentication
+//the auth provider is set up to check if the username and password passed as the auth parameters exist
+//and are correct
+
 @Configuration
 public class JWTSecurityConfig {
 
@@ -52,7 +57,8 @@ public class JWTSecurityConfig {
         httpSecurity.sessionManagement(session->session.disable());
         httpSecurity.csrf().disable();
         httpSecurity.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-        httpSecurity.authorizeRequests().requestMatchers("/signUp","/products/get**").permitAll()
+        httpSecurity.authorizeRequests().requestMatchers("/signUp","/products/getAllProducts","/products/getProduct/**",
+                        "/categories/getCategory","/resetPass/**").permitAll()
                 .anyRequest().authenticated();
         httpSecurity.authenticationProvider(authenticationProvider());
 
