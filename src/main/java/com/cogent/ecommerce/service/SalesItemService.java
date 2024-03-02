@@ -39,7 +39,7 @@ public class SalesItemService {
     @Transactional
     public List<SalesItem> addNewSalesItem(int accountId,List<SalesItemDTO> salesItems){
 
-        Account accountOfSale = accountService.getAccountById(accountId).orElse(null);
+        Account accountOfSale = accountService.getAccountById(accountId);
         long timeOfOrder = Instant.now().toEpochMilli();
         List<SalesItem> listOfSalesToSave = new ArrayList<>();
 
