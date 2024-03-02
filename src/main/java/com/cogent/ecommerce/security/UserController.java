@@ -28,62 +28,57 @@ public class UserController {
     private AccountService accountService;
 
     @PostMapping("/signUp")
-    public ResponseEntity<Boolean> createUser(@RequestBody RegisterRequest user){
-
-//        System.out.println(user.getPassword());
-//        System.out.println(user.getUsername());
-//        System.out.println(user.getEmail());
-
-        boolean register = authService.register(user);
-        if(!register) return ResponseEntity.badRequest().body(false);
-
-        CustomUser savedUser = authService.getUser(user.getUsername()).orElse(null);
-
-        //creating account after user was added to secure user table
-        //unsecure!!-->
-        Account account = new Account();
-        account.setUsername(user.getUsername());
-        account.setEmail(user.getEmail());
-        account.setId(savedUser.getId());
-        accountService.addAccount(account);
+    public ResponseEntity<Boolean> createUser(@RequestBody RegisterRequest user) {
+        boolean register = authService.registerUser(user);
+        if (!register) return ResponseEntity.badRequest().body(false);
         return ResponseEntity.ok(true);
     }
-    //TODO: ADMIN REGISTER METHOD
+
+    @PostMapping("/createAdmin")
+    public ResponseEntity<Boolean> createAdmin(@RequestBody RegisterRequest admin) {
+        boolean register = authService.registerAdmin(admin);
+        if (!register) return ResponseEntity.badRequest().body(false);
+        return ResponseEntity.ok(true);
+    }
 
     //this is checked by the security filter chain ->
     // if the username and password are correct this will allow this request to go through
     // else this method will not be allowed to be accessed
     @PostMapping("/auth")
-    public TokenResponse getAuth(Authentication auth){
+    public TokenResponse getAuth(Authentication auth) {
         System.out.println(auth);
         return new TokenResponse(jwtService.createToken(auth));
     }
 
     @GetMapping("/checkToken")
-    public ResponseEntity<Boolean> checkTokenValidity(@RequestHeader("Authorization") String authHeader){
+    public ResponseEntity<Boolean> checkTokenValidity(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.substring(7);
+
 //        System.out.println("AUTH HEADER: " +authHeader);
 //        System.out.println("TOKEN: "+token );
+
 
         boolean checkValid = jwtService.isValidToken(token);
 //        System.out.println(checkValid);
 
-        if(!checkValid) return ResponseEntity.ok(false);
+        if (!checkValid) return ResponseEntity.ok(false);
         return ResponseEntity.ok(true);
     }
+
     //same as check token but returns username from the token subject
     @GetMapping("/getUsername")
-    public ResponseEntity<?> getUsernameFromToken(@RequestHeader("Authorization") String authHeader){
+    public ResponseEntity<?> getUsernameFromToken(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.substring(7);
         String username = jwtService.getUsernameFromToken(token);
-        if(username==null)  return ResponseEntity.badRequest().body(null);
+        if (username == null) return ResponseEntity.badRequest().body(null);
         return ResponseEntity.ok().body(username);
     }
 
+
     @GetMapping("/resetPass/{email}")
-    public ResponseEntity<Boolean> checkIfUserExistsByEmail(@PathVariable String email){
+    public ResponseEntity<Boolean> checkIfUserExistsByEmail(@PathVariable String email) {
         CustomUser user = authService.getUserByEmail(email).orElse(null);
-        if(user==null) return ResponseEntity.ok().body(false);
+        if (user == null) return ResponseEntity.ok().body(false);
         //now set reset token and expiry time
         authService.createResetToken(user);
         authService.createEmail(user.getEmail(), user.getResetToken());
@@ -91,8 +86,9 @@ public class UserController {
     }
 
     @PutMapping("/resetPass/{token}/{email}")
-    public ResponseEntity<?> changePassword(@PathVariable String token,@PathVariable String email,
-                                            @RequestBody ResetPasswordRequest resetPasswordRequest){
-        return ResponseEntity.ok().body(authService.changePassword(token,email,resetPasswordRequest));
+    public ResponseEntity<?> changePassword(@PathVariable String token, @PathVariable String email,
+                                            @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        return ResponseEntity.ok().body(authService.changePassword(token, email, resetPasswordRequest));
     }
 }
+
