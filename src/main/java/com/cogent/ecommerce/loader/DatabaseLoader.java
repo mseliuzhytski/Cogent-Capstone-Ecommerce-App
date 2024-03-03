@@ -117,6 +117,16 @@ public class DatabaseLoader {
         Account account = accountJpaRepository.getAccountByUsername(userUsername);
         account.setDiscount(discount);
         accountRepository.saveAccount(account);
+
+        discount = new Discount();
+        discount.setDiscountCode("sc2000");
+        discount.setDiscountPercent(25);
+        discountRepository.saveDiscount(discount);
+
+        discount = new Discount();
+        discount.setDiscountCode("oakland_as");
+        discount.setDiscountPercent(10);
+        discountRepository.saveDiscount(discount);
     }
 
     public void loadSalesItem() {

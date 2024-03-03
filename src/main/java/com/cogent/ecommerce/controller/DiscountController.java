@@ -86,4 +86,14 @@ public class DiscountController {
         }
     }
 
+    @GetMapping(value="/getByCode/{code}")
+    public ResponseEntity<Discount> updateDiscount(@PathVariable String code) {
+        Discount discount = discountService.getDiscountByCode(code);
+        if (discount != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(discount);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }

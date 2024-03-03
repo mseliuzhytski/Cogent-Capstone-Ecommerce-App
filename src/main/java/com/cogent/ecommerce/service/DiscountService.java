@@ -1,9 +1,7 @@
 package com.cogent.ecommerce.service;
 
-import com.cogent.ecommerce.model.Account;
 import com.cogent.ecommerce.model.Discount;
 import com.cogent.ecommerce.repository.DiscountJpaRepository;
-import com.cogent.ecommerce.repository.DiscountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,5 +47,8 @@ public class DiscountService {
         }
     }
 
+    public Discount getDiscountByCode(String code) {
+        return repo.getDiscountByDiscountCode(code);
+    }
 
 }
