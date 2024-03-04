@@ -103,4 +103,24 @@ public class AccountController {
         return ResponseEntity.ok().body(account);
     }
 
+    @GetMapping("/accountByName/{username}")
+    public ResponseEntity<Account> getAccountByUsername(@PathVariable String username) {
+        Account account = accountService.getAccountByUsername(username);
+        if (account != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(account);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @GetMapping("/accountByEmail/{email}")
+    public ResponseEntity<Account> getAccountByEmail(@PathVariable String email) {
+        Account account = accountService.getAccountByEmail(email);
+        if (account != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(account);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }
