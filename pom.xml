@@ -100,6 +100,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<mainClass>com.cogent.ecommerce.EcommerceApplication</mainClass>
+					<classifier>exec</classifier>
 				</configuration>
 			</plugin>
 		</plugins>
