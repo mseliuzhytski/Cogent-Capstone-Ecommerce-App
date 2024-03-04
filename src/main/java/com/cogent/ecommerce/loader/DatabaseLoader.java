@@ -13,6 +13,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,6 +59,8 @@ public class DatabaseLoader {
     @Value( "${user.email}" )
     private String userEmail;
 
+    private Account rootAccount;
+    private Account userAccount;
 
     public final static String BULK_UPLOAD_FILE = "src/main/resources/bulk_upload.xlsx";
 
@@ -67,9 +70,9 @@ public class DatabaseLoader {
         loadProducts();
         loadPurchaseOrders();
         loadWishlist();
-        loadSalesItem();
         loadDiscount();
         bulkUpload();
+        loadSalesItem();
     }
 
     public void loadCategories() {
@@ -117,6 +120,7 @@ public class DatabaseLoader {
         Account account = accountJpaRepository.getAccountByUsername(userUsername);
         account.setDiscount(discount);
         accountRepository.saveAccount(account);
+        this.userAccount = account;
 
         discount = new Discount();
         discount.setDiscountCode("sc2000");
@@ -130,15 +134,28 @@ public class DatabaseLoader {
     }
 
     public void loadSalesItem() {
-        Account account = accountRepository.getById(1);
-        Product product = productRepository.getById(2);
+        long now = Instant.now().toEpochMilli();
+        long dayAgo = Instant.now().minus(1, ChronoUnit.DAYS).toEpochMilli();
+        long threeDaysAgo = Instant.now().minus(3, ChronoUnit.DAYS).toEpochMilli();
+
+        addSalesItem(rootAccount, 1, 3, threeDaysAgo);
+        addSalesItem(rootAccount, 2, 2, dayAgo);
+        addSalesItem(rootAccount, 3, 1, now);
+
+        addSalesItem(userAccount, 3, 2, threeDaysAgo);
+        addSalesItem(userAccount, 4, 1, dayAgo);
+        addSalesItem(userAccount, 5, 1, now);
+    }
+
+    private SalesItem addSalesItem(Account account, int productId, int quantity, long timeAdded) {
+        Product product = productRepository.getById(productId);
         SalesItem salesItem = new SalesItem();
         salesItem.setAccount(account);
         salesItem.setProduct(product);
-        salesItem.setQuantitySold(5);
-        salesItem.setTimeRecorded(Instant.now().toEpochMilli());
-        salesItem.setTotalPrice(9.95);
-        salesRepository.saveSalesItem(salesItem);
+        salesItem.setQuantitySold(quantity);
+        salesItem.setTimeRecorded(timeAdded);
+        salesItem.setTotalPrice(product.getPrice() * quantity);
+        return salesRepository.saveSalesItem(salesItem);
     }
 
     public void loadWishlist() {
@@ -187,26 +204,12 @@ public class DatabaseLoader {
     }
 
     public void loadAccounts() {
-//        Account account = new Account();
-//        account.setAdmin(false);
-//        account.setUser(true);
-//        account.setUsername("user");
-//        account.setEmail("user1@gmail.com");
-//        account.setPassword("abc123");
-//        accountRepository.saveAccount(account);
-//
-//        account = new Account();
-//        account.setAdmin(true);
-//        account.setUser(true);
-//        account.setUsername("admin");
-//        account.setEmail("admin1@gmail.com");
-//        account.setPassword("abc123");
-//        accountRepository.saveAccount(account);
-
         RegisterRequest request = RegisterRequest
                 .builder().username(adminUsername).password(adminPassword)
                 .email(adminEmail).build();
         authService.registerAdmin(request);
+
+        this.rootAccount = accountJpaRepository.getAccountByUsername(adminUsername);
     }
 
     private void loadProducts() {
