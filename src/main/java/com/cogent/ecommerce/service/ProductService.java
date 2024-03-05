@@ -52,7 +52,7 @@ public class ProductService {
     }
 
     public boolean addCategoryToProduct(Product product, String categoryName) {
-        Category category = categoryJpaRepository.findByName(categoryName);
+        Category category = categoryJpaRepository.findByName(categoryName).orElse(null);
         if (category == null) {
             category = new Category();
             category.setName(categoryName);

@@ -97,6 +97,15 @@ public class AuthService {
         return user.getId();
     }
 
+    public boolean checkIfAdmin(String token){
+       String role = jwtService.getRoleFromToken(token);
+        //System.out.println("ROLE ::::"+role);
+        if(role.equals("ADMIN")){
+            return true;
+        }
+        return false;
+    }
+
     //create reset token and expiry time for 30 mins after calling reset
     public void createResetToken(CustomUser user){
         user.setResetToken(UUID.randomUUID().toString());

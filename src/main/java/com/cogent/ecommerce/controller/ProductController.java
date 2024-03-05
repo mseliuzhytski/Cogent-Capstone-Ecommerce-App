@@ -2,6 +2,7 @@ package com.cogent.ecommerce.controller;
 
 import com.cogent.ecommerce.model.Product;
 import com.cogent.ecommerce.repository.ProductRepository;
+import com.cogent.ecommerce.security.AuthService;
 import com.cogent.ecommerce.service.BulkUploadService;
 import com.cogent.ecommerce.service.FilenameObject;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -33,6 +34,9 @@ public class ProductController {
     @Autowired
     private BulkUploadService bulkUploadService;
 
+    @Autowired
+    AuthService authService;
+
     @GetMapping(value="/product/list")
     public List<Product> getProducts() {
         return productRepository.getAllProducts();
@@ -53,7 +57,11 @@ public class ProductController {
     }
 
     @PostMapping(value="/product")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> createProduct(@RequestHeader("Authorization") String authHeader,@RequestBody Product product) {
+        String token = authHeader.substring(7);
+        if(!authService.checkIfAdmin(token)){
+            return ResponseEntity.badRequest().body(null);
+        }
         Product p = null;
         try {
             p = productRepository.saveProduct(product);
@@ -67,7 +75,11 @@ public class ProductController {
     }
 
     @DeleteMapping(value="/product/{id}")
-    public ResponseEntity<Product> deleteProductById(@PathVariable int id) {
+    public ResponseEntity<Product> deleteProductById(@RequestHeader("Authorization") String authHeader,@PathVariable int id) {
+        String token = authHeader.substring(7);
+        if(!authService.checkIfAdmin(token)){
+            return ResponseEntity.badRequest().body(null);
+        }
         Product p = null;
         try {
             p = productRepository.deleteProductById(id);
@@ -83,8 +95,12 @@ public class ProductController {
     }
 
     @PutMapping(value="/product/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable int id,
+    public ResponseEntity<Product> updateProduct(@RequestHeader("Authorization") String authHeader,@PathVariable int id,
                                                  @RequestBody Product newProduct) {
+        String token = authHeader.substring(7);
+        if(!authService.checkIfAdmin(token)){
+            return ResponseEntity.badRequest().body(null);
+        }
         Product p = null;
         try {
             p = productRepository.updateProduct(newProduct, id);

@@ -77,5 +77,14 @@ public class JwtService {
         }
     }
 
+    public String getRoleFromToken(String token){
+
+        try {
+            jwtDecoder.decode(token);
+            return jwtDecoder.decode(token).getClaims().get("scope").toString();
+        }catch (JwtException e){
+            return null;
+        }
+    }
 
 }

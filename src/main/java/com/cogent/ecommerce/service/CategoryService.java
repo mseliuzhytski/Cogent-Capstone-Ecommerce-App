@@ -29,7 +29,7 @@ public class CategoryService {
         return categoryJpaRepository.findById(id);
     }
 
-    public Category getCategoryByName(String name) {
+    public Optional<Category> getCategoryByName(String name) {
         return categoryJpaRepository.findByName(name);
     }
 
@@ -53,6 +53,16 @@ public class CategoryService {
         }
 
         return false;
+    }
+
+    public Category updateCategory(int id, String updatedName){
+
+        Category categoryToUpdate = categoryJpaRepository.findById(id).orElse(null);
+        if(categoryToUpdate!=null){
+            categoryToUpdate.setName(updatedName);
+            return categoryJpaRepository.save(categoryToUpdate);
+        }
+        return null;
     }
 
 }

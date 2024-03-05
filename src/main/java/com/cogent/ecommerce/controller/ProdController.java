@@ -3,6 +3,7 @@ package com.cogent.ecommerce.controller;
 import com.cogent.ecommerce.model.Category;
 import com.cogent.ecommerce.model.Product;
 import com.cogent.ecommerce.repository.ProductJpaRepository;
+import com.cogent.ecommerce.security.AuthService;
 import com.cogent.ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +21,18 @@ public class ProdController {
 
     @Autowired
     ProductService productService;
+    @Autowired
+    AuthService authService;
 
     //admin usage in final version
     //currently just to add products using postman
     @PostMapping("/add")
-    public ResponseEntity<?> addProduct(@RequestBody Product product){
+    public ResponseEntity<?> addProduct(@RequestHeader("Authorization") String authHeader,@RequestBody Product product){
+
+        String token = authHeader.substring(7);
+        if(!authService.checkIfAdmin(token)){
+            return ResponseEntity.badRequest().body("Not Authorized");
+        }
 
         if(productService.getProductById(product.getId()).isPresent()){
             return ResponseEntity.badRequest().body("Product Exists");
@@ -34,7 +42,12 @@ public class ProdController {
     }
 
     @PutMapping("/addCategory/{productId}/{categoryId}")
-    public ResponseEntity<?> addCategoryToProduct(@PathVariable int productId, @PathVariable int categoryId){
+    public ResponseEntity<?> addCategoryToProduct(@RequestHeader("Authorization") String authHeader,@PathVariable int productId, @PathVariable int categoryId){
+
+        String token = authHeader.substring(7);
+        if(!authService.checkIfAdmin(token)){
+            return ResponseEntity.badRequest().body("Not Authorized");
+        }
 
         boolean addCheck = productService.addCategoryToProduct(productId,categoryId);
 
@@ -60,14 +73,23 @@ public class ProdController {
     }
 
     @DeleteMapping("/removeCategory/{productId}/{categoryId}")
-    public ResponseEntity<?> removeCategoryFromProduct(@PathVariable int productId, @PathVariable int categoryId){
+    public ResponseEntity<?> removeCategoryFromProduct(@RequestHeader("Authorization") String authHeader,@PathVariable int productId, @PathVariable int categoryId){
+
+        String token = authHeader.substring(7);
+        if(!authService.checkIfAdmin(token)){
+            return ResponseEntity.badRequest().body("Not Authorized");
+        }
 
         return ResponseEntity.ok().body(productService.deleteCategoryFromProduct(productId,categoryId));
     }
 
     @DeleteMapping("/removeProduct/{id}")
-    public ResponseEntity<?> removeProduct(@PathVariable int id){
+    public ResponseEntity<?> removeProduct(@RequestHeader("Authorization") String authHeader,@PathVariable int id){
 
+        String token = authHeader.substring(7);
+        if(!authService.checkIfAdmin(token)){
+            return ResponseEntity.badRequest().body("Not Authorized");
+        }
 //        if(productService.getProductById(id).isEmpty()){
 //            return ResponseEntity.badRequest().body("Product at that id does not exist");
 //        }

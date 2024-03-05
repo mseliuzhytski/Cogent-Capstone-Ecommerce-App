@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200")
 public class AccountController {
 
     @Autowired
@@ -47,7 +47,11 @@ public class AccountController {
     }
 
     @PostMapping(value="/account")
-    public ResponseEntity<Account> createAccount(@RequestBody Account account) {
+    public ResponseEntity<Account> createAccount(@RequestHeader("Authorization") String authHeader,@RequestBody Account account) {
+        String token = authHeader.substring(7);
+        if(!authService.checkIfAdmin(token)){
+            return ResponseEntity.badRequest().body(null);
+        }
         Account a = null;
         try {
             a = accountService.addAccount(account);

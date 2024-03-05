@@ -64,6 +64,11 @@ public class UserController {
         if (!checkValid) return ResponseEntity.ok(false);
         return ResponseEntity.ok(true);
     }
+    @GetMapping("/checkAdmin")
+    public ResponseEntity<Boolean> checkIfUserIsAdmin(@RequestHeader("Authorization") String authHeader){
+        String token = authHeader.substring(7);
+        return ResponseEntity.ok().body(authService.checkIfAdmin(token));
+    }
 
     //same as check token but returns username from the token subject
     @GetMapping("/getUsername")
