@@ -1,0 +1,55 @@
+version: '3.7'
+services:
+  main-service:
+    image: chrisgioia64/ecommerce-main:1.0.0
+    ports:
+      - "8080:8080"
+    networks:
+      - "main-network"
+    depends_on:
+      - SERVICE-REGISTRY
+    environment:
+      -EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://SERVICE-REGISTRY:8761/eureka
+
+  sales-report-service:
+    image: chrisgioia64/ecommerce-sales:1.0.0
+    ports:
+      - "9001:9001"
+    networks:
+      - "main-network"
+    depends_on:
+      - SERVICE-REGISTRY
+    environment:
+      -EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://SERVICE-REGISTRY:8761/eureka
+
+  Discount-Service:
+    image: chrisgioia64/ecommerce-discount:1.0.0
+    ports:
+      - "9002:9002"
+    networks:
+      - "main-network"
+    depends_on:
+      - SERVICE-REGISTRY
+    environment:
+      -EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://SERVICE-REGISTRY:8761/eureka
+
+  SERVICE-REGISTRY:
+    image: chrisgioia64/ecommerce-service-registry:1.0.0
+    ports:
+      - "8761:8761"
+    networks:
+      - "main-network"
+
+  API-GATEWAY:
+    image: chrisgioia64/ecommerce-gateway:1.0.0
+    ports:
+      - "9005:9005"
+    networks:
+      - "main-network"
+    depends_on:
+      - SERVICE-REGISTRY
+    environment:
+      -EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://SERVICE-REGISTRY:8761/eureka
+
+networks:
+  main-network:
