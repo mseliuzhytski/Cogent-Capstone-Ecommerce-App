@@ -27,9 +27,14 @@ public class WishlistController {
 	public ResponseEntity<?> addWhishlistItem(@RequestBody Product item, @RequestHeader("Authorization") String authHeader){
 		return wishlistService.addWishlistItem(item, authHeader);
 	}
+
+	@PostMapping("/add/{id}")
+	public ResponseEntity<?> addToWishList(@PathVariable int id, @RequestHeader("Authorization") String authHeader){
+		return wishlistService.addToWishList(id,authHeader);
+	}
 	
-	@PutMapping("/removeitem")
-	public ResponseEntity<?> removeWishlistItem(@RequestBody Product item, @RequestHeader("Authorization") String authHeader){
-		return wishlistService.removeWishlistItem(item, authHeader);
+	@DeleteMapping("/removeitem/{id}")
+	public ResponseEntity<?> removeWishlistItem(@PathVariable int id, @RequestHeader("Authorization") String authHeader){
+		return wishlistService.removeWishlistItem(id, authHeader);
 	}
 }
