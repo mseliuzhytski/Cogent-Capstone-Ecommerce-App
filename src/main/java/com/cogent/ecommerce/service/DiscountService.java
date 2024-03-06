@@ -49,5 +49,9 @@ public class DiscountService {
         }
     }
 
+    public Discount getDiscountByCode(String code) {
+        return repo.getDiscountByDiscountCode(code);
+    }
+
 
 }

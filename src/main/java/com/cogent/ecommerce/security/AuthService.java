@@ -144,7 +144,19 @@ public class AuthService {
         return false;
     }
 
+    public void sendDiscountEmail(Account account){
+        SimpleMailMessage discountEmail = new SimpleMailMessage();
+        discountEmail.setFrom(email);
+        discountEmail.setTo(account.getEmail());
+        discountEmail.setSubject("You received a discount!");
+        discountEmail.setText("A discount code has been added to your account!\n" +
+                "Use the following code on your next visit to get "+account.getDiscount().getDiscountPercent()
+                +"% off of your whole order!\n" +
+                "Discount Code: "+account.getDiscount().getDiscountCode());
+        emailService.sendEmail(discountEmail);
 
+
+    }
 
 
 

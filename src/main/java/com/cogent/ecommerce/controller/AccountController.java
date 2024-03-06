@@ -87,6 +87,10 @@ public class AccountController {
         Account a = null;
         try {
             a = accountService.updateAccount(newAccount, id);
+            //send discount email
+            if(newAccount.getDiscount()!=null) {
+                authService.sendDiscountEmail(a);
+            }
         } catch (DataIntegrityViolationException ex) {
             ex.printStackTrace();
         }
@@ -105,6 +109,26 @@ public class AccountController {
         Account account = accountService.getAccountByUsername(username);
         if (account == null) return ResponseEntity.badRequest().body(null);
         return ResponseEntity.ok().body(account);
+    }
+
+    @GetMapping("/accountByName/{username}")
+    public ResponseEntity<Account> getAccountByUsername(@PathVariable String username) {
+        Account account = accountService.getAccountByUsername(username);
+        if (account != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(account);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @GetMapping("/accountByEmail/{email}")
+    public ResponseEntity<Account> getAccountByEmail(@PathVariable String email) {
+        Account account = accountService.getAccountByEmail(email);
+        if (account != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(account);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 }
