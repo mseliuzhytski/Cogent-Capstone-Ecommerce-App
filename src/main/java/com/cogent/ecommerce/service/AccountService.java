@@ -48,6 +48,10 @@ public class AccountService {
         return accountRepo.getAccountByEmail(email);
     }
 
+    public Account getAccountByEmail(String email) {
+        return accountRepo.getAccountByEmail(email);
+    }
+
     public Account deleteById(int id) {
         Optional<Account> account = accountRepo.findById(id);
         if (account.isPresent()) {

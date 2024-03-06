@@ -3,7 +3,8 @@ server:
 
 spring:
   application:
-    name: Main-Service
+    name: main-service
+
 
 eureka:
   client:
@@ -13,3 +14,4 @@ eureka:
       default-zone: http://localhost:8761/eureka/
 instance:
   hostname: localhost
+

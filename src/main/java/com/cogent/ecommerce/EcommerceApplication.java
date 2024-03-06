@@ -12,31 +12,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableDiscoveryClient
 public class EcommerceApplication
 {
-//	@Value( "${spring.jpa.hibernate.ddl-auto}" )
-//	private String ddl_auto;
-//
-//	@Value("${seedData}")
-//	private String seedData;
-//	public static final String TRUE = "true";
-//	public static final String FALSE = "false";
-//
-//	public static final String CREATE_DROP = "create-drop";
-//	public static final String CREATE = "create";
-//	public static final String UPDATE = "update";
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceApplication.class, args);
 	}
-
-//	@Autowired
-//	private DatabaseLoader loader;
-
-//	@Override
-//	public void run(String... args) throws Exception {
-//		if (seedData.equals(TRUE)) {
-//			loader.loadSeededData();
-//		}
-//	}
 
 }
