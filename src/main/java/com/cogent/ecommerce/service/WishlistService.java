@@ -68,22 +68,58 @@ public class WishlistService {
 		return ResponseEntity.ok().body(w);
 	}
 	
-	public ResponseEntity<?> removeWishlistItem(Product item, String authHeader){
+	public ResponseEntity<?> removeWishlistItem(int item, String authHeader){
 		String token = authHeader.substring(7);
         String username = jwtService.getUsernameFromToken(token);
         int aid = authService.getAccountIdFromUsername(username);
         Account account = accountJpaRepository.findById(aid).orElse(null);
 		if(account == null){return ResponseEntity.badRequest().body("Account is NULL");}
 
-        List<Wishlist> wl = wishlistJpaRepository.findAll();
-		for(Wishlist i : wl) {
-			if(i.getAccount().getId() == account.getId() &&
-			   i.getProduct().getId() == item.getId()) {
-				int id = i.getId();
-				wishlistJpaRepository.deleteById(id);
-				return ResponseEntity.ok().body("Item removed");
-			}
+//        List<Wishlist> wl = wishlistJpaRepository.findAll();
+//		for(Wishlist i : wl) {
+//			if(i.getAccount().getId() == account.getId() &&
+//			   i.getProduct().getId() == item.getId()) {
+//				int id = i.getId();
+//				wishlistJpaRepository.deleteById(id);
+//				return ResponseEntity.ok().body("Item removed");
+//			}
+//		}
+		Product product = productService.getProductById(item).orElse(null);
+		if(product==null){
+			return ResponseEntity.badRequest().body("Item not found");
 		}
+		Wishlist wishlist = wishlistJpaRepository
+				.findByAccountIdAndProductId(aid,item).orElse(null);
+		if(wishlist!=null){
+			wishlistJpaRepository.delete(wishlist);
+			return ResponseEntity.ok().body("Item removed");
+		}
+
 		return ResponseEntity.badRequest().body("Item not found");
 	}
+
+
+	public ResponseEntity<?> addToWishList(int productId, String authHeader) {
+		String token = authHeader.substring(7);
+		String username = jwtService.getUsernameFromToken(token);
+		int aid = authService.getAccountIdFromUsername(username);
+		System.out.println("account id: " + aid);
+		Account account = accountJpaRepository.findById(aid).orElse(null);
+		if (account == null) {
+			return ResponseEntity.badRequest().body("Account is NULL");
+		}
+		Wishlist wishlistItem = new Wishlist();
+		wishlistItem.setAccount(account);
+		if(wishlistJpaRepository.existsByAccountIdAndProductId(aid,productId)){
+			return ResponseEntity.badRequest().body("Product exists in user's wishlist");
+		}
+		Product product = productService.getProductById(productId).orElse(null);
+		wishlistItem.setProduct(product);
+		if(product==null){
+			return ResponseEntity.badRequest().body("Product does not exist");
+		}
+		wishlistJpaRepository.save(wishlistItem);
+		return ResponseEntity.ok().body(wishlistItem);
+	}
+
 }

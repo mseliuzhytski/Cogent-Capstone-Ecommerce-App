@@ -3,6 +3,7 @@ package com.cogent.ecommerce.security;
 import com.cogent.ecommerce.User.CustomUser;
 import com.cogent.ecommerce.User.Role;
 import com.cogent.ecommerce.User.UserRepository;
+import com.cogent.ecommerce.controller.ContactDTO;
 import com.cogent.ecommerce.service.EmailService;
 import com.cogent.ecommerce.model.Account;
 import com.cogent.ecommerce.service.AccountService;
@@ -159,5 +160,15 @@ public class AuthService {
     }
 
 
-
+    public boolean sendEmailToManagement(ContactDTO contactDTO) {
+        SimpleMailMessage issueEmail = new SimpleMailMessage();
+        issueEmail.setFrom(email);
+        issueEmail.setTo(email);
+        issueEmail.setSubject("Issue: "+contactDTO.getIssueType());
+        issueEmail.setText("User Email: "+contactDTO.getEmail()+"\n" +
+                "User Name: "+contactDTO.getName()+"\n"
+                +"User Message: "+contactDTO.getMessage());
+        emailService.sendEmail(issueEmail);
+        return true;
+    }
 }
