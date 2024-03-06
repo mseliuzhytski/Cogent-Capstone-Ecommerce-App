@@ -220,7 +220,7 @@ public class DatabaseLoader {
         product.setCategoriesList(new HashSet<>());
         product.setPrice(1.99);
         product.setDateAdded(Instant.now().toEpochMilli());
-        product.setImageLocation("pencil.jpg");
+        product.setImageLocation("pencil.jpeg");
         product.setStock(10);
 
         productRepository.saveProduct(product);
@@ -231,7 +231,7 @@ public class DatabaseLoader {
         //product.setCategory("Office Supplies");
         product.setPrice(2.99);
         product.setDateAdded(Instant.now().toEpochMilli());
-        product.setImageLocation("eraser.jpg");
+        product.setImageLocation("eraser.jpeg");
         product.setStock(10);
 
         productRepository.saveProduct(product);
