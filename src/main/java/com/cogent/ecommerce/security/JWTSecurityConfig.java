@@ -45,9 +45,6 @@ import java.util.UUID;
 @Configuration
 public class JWTSecurityConfig {
 
-
-
-
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
 
@@ -58,7 +55,7 @@ public class JWTSecurityConfig {
         httpSecurity.csrf().disable();
         httpSecurity.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
         httpSecurity.authorizeRequests().requestMatchers("/signUp","/products/getAllProducts","/products/getProduct/**",
-                        "/categories/getCategory","/resetPass/**").permitAll()
+                        "/categories/getCategory","/resetPass/**","/product/list").permitAll()
                 .anyRequest().authenticated();
         httpSecurity.authenticationProvider(authenticationProvider());
 
@@ -90,22 +87,6 @@ public class JWTSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Bean
-//    public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource){
-//        return new JdbcUserDetailsManager(dataSource);
-//    }
-//
-//    @Bean
-//    public UserDetailsService userDetailsService(DataSource dataSource){
-//
-////        var user2 = User.withUsername("default").password("{noop}random").roles("USER").build();
-////        var user = User.withUsername("rafi").password("{noop}admin").roles("ADMIN").build();
-//        var jdbcUserManager = new JdbcUserDetailsManager(dataSource);
-////        jdbcUserManager.createUser(user);
-////        jdbcUserManager.createUser(user2);
-//        return jdbcUserManager;
-//    }
 
 
     //jwtDecoder

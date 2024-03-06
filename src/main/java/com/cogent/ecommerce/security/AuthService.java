@@ -97,6 +97,15 @@ public class AuthService {
         return user.getId();
     }
 
+    public boolean checkIfAdmin(String token){
+       String role = jwtService.getRoleFromToken(token);
+        //System.out.println("ROLE ::::"+role);
+        if(role.equals("ADMIN")){
+            return true;
+        }
+        return false;
+    }
+
     //create reset token and expiry time for 30 mins after calling reset
     public void createResetToken(CustomUser user){
         user.setResetToken(UUID.randomUUID().toString());
@@ -135,7 +144,19 @@ public class AuthService {
         return false;
     }
 
+    public void sendDiscountEmail(Account account){
+        SimpleMailMessage discountEmail = new SimpleMailMessage();
+        discountEmail.setFrom(email);
+        discountEmail.setTo(account.getEmail());
+        discountEmail.setSubject("You received a discount!");
+        discountEmail.setText("A discount code has been added to your account!\n" +
+                "Use the following code on your next visit to get "+account.getDiscount().getDiscountPercent()
+                +"% off of your whole order!\n" +
+                "Discount Code: "+account.getDiscount().getDiscountCode());
+        emailService.sendEmail(discountEmail);
 
+
+    }
 
 
 

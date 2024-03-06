@@ -2,6 +2,7 @@ package com.cogent.ecommerce.controller;
 
 import com.cogent.ecommerce.model.Account;
 import com.cogent.ecommerce.model.Discount;
+import com.cogent.ecommerce.security.AuthService;
 import com.cogent.ecommerce.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,6 +19,8 @@ public class DiscountController {
 
     @Autowired
     private DiscountService discountService;
+    @Autowired
+    AuthService authService;
 
     @GetMapping(value="/list")
     public List<Discount> getDiscounts() {
@@ -40,7 +43,12 @@ public class DiscountController {
     }
 
     @PostMapping(value="/")
-    public ResponseEntity<Discount> createDiscount(@RequestBody Discount discount) {
+    public ResponseEntity<Discount> createDiscount(@RequestHeader("Authorization") String authHeader,
+                                                   @RequestBody Discount discount) {
+        String token = authHeader.substring(7);
+        if(!authService.checkIfAdmin(token)){
+            return ResponseEntity.badRequest().body(null);
+        }
         Discount a = null;
         try {
             a = discountService.addDiscount(discount);
@@ -56,7 +64,12 @@ public class DiscountController {
     }
 
     @DeleteMapping(value="/{id}")
-    public ResponseEntity<Account> deleteDiscountById(@PathVariable int id) {
+    public ResponseEntity<Account> deleteDiscountById(@RequestHeader("Authorization") String authHeader,
+                                                      @PathVariable int id) {
+        String token = authHeader.substring(7);
+        if(!authService.checkIfAdmin(token)){
+            return ResponseEntity.badRequest().body(null);
+        }
         Discount a = null;
         try {
             a = discountService.deleteById(id);
@@ -71,8 +84,13 @@ public class DiscountController {
     }
 
     @PutMapping(value="/{id}")
-    public ResponseEntity<Discount> updateProduct(@PathVariable int id,
+    public ResponseEntity<Discount> updateProduct(@RequestHeader("Authorization") String authHeader,
+                                                  @PathVariable int id,
                                                  @RequestBody Discount discount) {
+        String token = authHeader.substring(7);
+        if(!authService.checkIfAdmin(token)){
+            return ResponseEntity.badRequest().body(null);
+        }
         Discount a = null;
         try {
             a = discountService.updateDiscount(discount, id);
