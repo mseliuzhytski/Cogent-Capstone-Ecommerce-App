@@ -1,6 +1,7 @@
 package com.cogent.ecommerce.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,4 +17,7 @@ public interface WishlistJpaRepository extends JpaRepository<Wishlist, Integer>{
 	//List<SalesItem> findByAccountId(int accountId);
 	boolean existsByProduct (Product item);
 	boolean existsByAccount (Account account);
+	boolean existsByAccountIdAndProductId(int accountId,int productId);
+
+	Optional<Wishlist> findByAccountIdAndProductId(int accountId, int productId);
 }
