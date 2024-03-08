@@ -14,7 +14,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/products")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class ProdController {
 
     //TODO: FOR SECURITY THESE NEED TO ONLY BE ACCESSIBLE TO ADMINS

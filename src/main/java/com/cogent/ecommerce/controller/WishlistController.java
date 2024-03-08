@@ -12,7 +12,7 @@ import com.cogent.ecommerce.service.WishlistService;
 
 @RestController
 @RequestMapping("/wishlist")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class WishlistController {
 
 	@Autowired

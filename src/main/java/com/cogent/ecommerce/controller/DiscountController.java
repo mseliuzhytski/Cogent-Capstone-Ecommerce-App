@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/discount")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class DiscountController {
 
     @Autowired

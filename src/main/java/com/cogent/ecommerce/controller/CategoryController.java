@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class CategoryController {
 
     //TODO: FOR SECURITY THESE NEED TO ONLY BE ACCESSIBLE TO ADMINS--DONE
