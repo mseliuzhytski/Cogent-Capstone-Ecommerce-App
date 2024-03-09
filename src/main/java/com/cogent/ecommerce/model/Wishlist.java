@@ -16,6 +16,16 @@ public class Wishlist {
     @ManyToOne
     private Product product;
 
+    private double priceOnAdd;
+
+    public double getPriceOnAdd() {
+        return priceOnAdd;
+    }
+
+    public void setPriceOnAdd(double priceOnAdd) {
+        this.priceOnAdd = priceOnAdd;
+    }
+
     public int getId() {
         return id;
     }
