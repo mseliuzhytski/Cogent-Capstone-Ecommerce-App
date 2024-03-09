@@ -118,6 +118,7 @@ public class WishlistService {
 		if(product==null){
 			return ResponseEntity.badRequest().body("Product does not exist");
 		}
+		wishlistItem.setPriceOnAdd(product.getPrice());
 		wishlistJpaRepository.save(wishlistItem);
 		return ResponseEntity.ok().body(wishlistItem);
 	}
