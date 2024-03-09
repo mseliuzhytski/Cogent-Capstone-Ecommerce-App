@@ -114,6 +114,7 @@ CREATE TABLE `sales_item` (
 
 CREATE TABLE `wishlist` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `price_on_add` double NOT NULL,
   `account_id` int DEFAULT NULL,
   `product_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
