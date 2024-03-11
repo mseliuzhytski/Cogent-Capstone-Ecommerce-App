@@ -81,6 +81,8 @@ Join the EShop community today and embark on a journey of discovery, convenience
 6. **Access the Application:**
 - Once all services are up and running, you should be able to access and fully utilize the application. You can access the application on the port mentioned on the angular application.
 
+## Deploy
+See this [file](deployment.md).
 
 ## Authors
 
