@@ -55,7 +55,8 @@ public class JWTSecurityConfig {
         httpSecurity.csrf().disable();
         httpSecurity.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
         httpSecurity.authorizeRequests().requestMatchers("/signUp","/products/getAllProducts","/products/getProduct/**",
-                        "/categories/getCategory","/resetPass/**","/product/list","/databaseloader", "/content/**","/contact/**").permitAll()
+                        "/categories/getCategory","/resetPass/**","/product/list","/product/1", "/databaseloader", "/content/**","/contact/**",
+                        "/environment/**").permitAll()
                 .anyRequest().authenticated();
         httpSecurity.authenticationProvider(authenticationProvider());
 
