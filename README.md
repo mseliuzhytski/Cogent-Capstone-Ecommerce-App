@@ -38,6 +38,9 @@ Join the EShop community today and embark on a journey of discovery, convenience
 
 **Deployment:** AWS
 
+## Powerpoint
+
+Our [Powerpoint Presentation](capstone.pptx)
 
 ## Run Locally
 
